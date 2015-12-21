@@ -14,14 +14,6 @@ Cov = X' * Y;
 [U, S, V] = svd(Cov);
 R = V * diag([1 det(V*U')]) * U';
 
-theta = acosd(R(1));
-R = [
-
-   cosd(theta)    -sind(theta)
-   sind(theta)    cosd(theta)   
-   ];
-
-
 t = qHat' - R * pHat';
 
 rotMat = R;

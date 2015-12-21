@@ -5,46 +5,50 @@ im2 = imread('data/brain2.tif');
 %im2 = rgb2gray(im2);
 %[fp, mp] = part1.getPoints()
 
-fp = [ 
+fp = [
 
-  351.0000  821.0000
-   76.0000  515.0000
-   49.0000  438.0000
-  106.0000  544.0000
-  403.0000   71.0000
-  358.0000   54.0000
-  744.0000  327.0000
-  631.0000  283.0000
-  219.0000  363.0000
-  412.0000  346.0000
-  ];
-% 
-% 
+  817.2500  351.2500
+  515.7500   71.2500
+  434.7500   47.7500
+   66.2500  400.7500
+   52.7500  360.7500
+  324.7500  743.7500
+  345.7500  411.2500
+  658.7500  200.7500
+  607.7500  538.7500
+  283.2500  631.7500
+];
+
 mp = [
-
-  148.0000  134.0000
-  559.0000  141.0000
-  627.0000  179.0000
-  514.0000  148.0000
-  653.0000  690.0000
-  689.0000  670.0000
-  229.0000  759.0000
-  338.0000  708.0000
-  565.0000  358.0000
-  445.0000  509.0000
-  
-  ];
+  136.2500  148.7500
+  136.7500  561.2500
+  178.2500  630.2500
+  689.2500  653.7500
+  668.7500  689.2500
+  755.7500  230.2500
+  507.2500  445.2500
+  136.7500  365.2500
+  415.7500  168.7500
+  709.2500  338.7500
+ ]; 
 
 [ R, t ] = part1.calcPointBasedReg( fp, mp );
 part1.calcRMSE(fp, mp, R, t)
 
 T = zeros(3,3);
-T(1:2,1:2) = R2;
+T(1:2,1:2) = R;
 T(3,3) = 1;
 tform = affine2d(T);
+
 im2Rot = imwarp(im2, tform);
+
 rim1 = imref2d(size(im1));
-rim2Rot = imref2d(size(im2Rot), [-1167 0], [-546 623]);
+[yLength, xLength, ~] = size(im1);
+vertices = [ 0 0; 0 xLength; yLength xLength; yLength 0];
+verticesR = (R * vertices')';
+maxV = max(verticesR);
+minV = min(verticesR);
+rim2Rot = imref2d(size(im2Rot),[minV(2) maxV(2)],[minV(1) maxV(1)]);
 % figure()
 % imshowpair(zeros(size(im1)), rim1, im2Rot, rim2Rot);
 % 
@@ -53,7 +57,7 @@ rim2Rot = imref2d(size(im2Rot), [-1167 0], [-546 623]);
 rim2Rot.XWorldLimits = rim2Rot.XWorldLimits + t(2);
 rim2Rot.YWorldLimits = rim2Rot.YWorldLimits + t(1);
 figure()
-edges = edge(rgb2gray(im1),'canny');
+edges = edge(rgb2gray(im1),'prewitt');
 imshowpair(edges, rim1, im2Rot, rim2Rot, 'blend');
 rim2 = imref2d(size(im2));
 % imshow(im2, rim2);

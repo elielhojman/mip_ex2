@@ -4,5 +4,10 @@ brain1img = imread('data/brain1.tif');
 brain2img = imread('data/brain2.tif');
 % cpselect(moving, fixed)
 [movingPoints, fixedPoints ] = cpselect(brain2img, brain1img, 'Wait', true);
+
+% The first column should be the y coordinate
+movingPoints = fliplr(movingPoints);
+fixedPoints = fliplr(fixedPoints);
+
 end
 
