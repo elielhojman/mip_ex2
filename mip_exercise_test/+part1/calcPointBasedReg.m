@@ -7,12 +7,20 @@ qHat = mean(fixedPoints);
 
 % centered vectors
 X = movingPoints - repmat(pHat, rows, 1);
-Y = fixedPoints - repmat(pHat, rows, 1);
+Y = fixedPoints - repmat(qHat, rows, 1);
 
 % Covariance matrix
 Cov = X' * Y;
 [U, S, V] = svd(Cov);
 R = V * diag([1 det(V*U')]) * U';
+
+theta = acosd(R(1));
+R = [
+
+   cosd(theta)    -sind(theta)
+   sind(theta)    cosd(theta)   
+   ];
+
 
 t = qHat' - R * pHat';
 
