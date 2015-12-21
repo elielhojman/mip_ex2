@@ -56,8 +56,11 @@ rim2Rot.XWorldLimits = rim2Rot.XWorldLimits + t(2);
 rim2Rot.YWorldLimits = rim2Rot.YWorldLimits + t(1);
 
 figure()
-edges = edge(rgb2gray(im1),'prewitt');
+edges = edge(rgb2gray(im1),'canny');
 imshowpair(edges, rim1, im2Rot, rim2Rot, 'blend');
+
+figure()
+imshowpair(im1, rim1, im2Rot, rim2Rot, 'blend');
 
 end
 
